@@ -95,7 +95,7 @@ describe('app-dir action size limit invalid config', () => {
         `
         module.exports = {
           experimental: {
-            serverActions: { bodySizeLimit: '1.5mb' }
+            serverActions: { bodySizeLimit: '2mb' }
           },
         }
         `
@@ -124,7 +124,7 @@ describe('app-dir action size limit invalid config', () => {
           )
         )
         expect(logs).not.toContainEqual(
-          expect.stringContaining('Error: Body exceeded 1.5mb limit')
+          expect.stringContaining('Error: Body exceeded 2mb limit')
         )
       }
     })
@@ -134,7 +134,7 @@ describe('app-dir action size limit invalid config', () => {
       const requestTracker = createRequestTracker(browser)
 
       const [, actionResponse] = await requestTracker.captureResponse(
-        () => browser.elementByCss('#size-2mb').click(),
+        () => browser.elementByCss('#size-3mb').click(),
         { request: { method: 'POST', pathname: '/file' } }
       )
       expect(actionResponse.status()).toBe(500) // TODO: 413?
@@ -145,7 +145,7 @@ describe('app-dir action size limit invalid config', () => {
       if (!isNextDeploy) {
         await retry(() => {
           expect(logs).toContainEqual(
-            expect.stringContaining('Error: Body exceeded 1.5mb limit')
+            expect.stringContaining('Error: Body exceeded 2mb limit')
           )
           expect(logs).toContainEqual(
             expect.stringContaining(
